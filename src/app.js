@@ -45,7 +45,8 @@ app.put("/repositories/:id", (request, response) => {
       title,
       url,
       techs,
-      likes: 0
+      //pega o numero de like ja existente para o registro.
+      likes: repositories[repositoryIndex].likes
     }
 
     repositories[repositoryIndex] = repository;
@@ -55,7 +56,7 @@ app.put("/repositories/:id", (request, response) => {
 });
 
 app.delete("/repositories/:id", (request, response) => {
-  // TODO
+  
   const {id} = request.params;
 
   const repositoryIndex = repositories.findIndex(
@@ -65,7 +66,7 @@ app.delete("/repositories/:id", (request, response) => {
       return response.status(400).json({error:'Project not found'})
       
     }
- 
+ //caso seja maior que zero apaga o repositorio 
     repositories.splice(repositoryIndex,1);
     return response.status(204).send();
 });
@@ -74,8 +75,7 @@ app.post("/repositories/:id/like", (request, response) => {
   // TODO
   const {id} = request.params;
   const repository = { id: uuid(),likes: 0 };
-   
- 
+    
   const repositoryIndex = repositories.findIndex(
     repository => repository.id === id);
     
@@ -83,8 +83,10 @@ app.post("/repositories/:id/like", (request, response) => {
       return response.status(400).json({error:'Project not found'})
       
     }
-    repositories[repositoryIndex] = repository;
-    return response.json(repository)
+    repositories[repositoryIndex].likes ++;
+   // repositories[repositoryIndex] = repository;
+    //return response.json(repository)
+    return response.json(repositories[repositoryIndex])
 });
 
 module.exports = app;
